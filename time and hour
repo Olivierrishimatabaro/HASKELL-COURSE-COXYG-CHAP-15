@@ -1,0 +1,25 @@
+import Control.Exception
+import Text.Read (readMaybe)
+
+main :: IO ()
+main = do
+  putStrLn "Enter the time (in hours):"
+  timeInput <- getLine
+
+  case readMaybe timeInput of
+    Nothing -> putStrLn "Error: Invalid time input."
+    Just time ->
+      if time == 0
+        then putStrLn "Error: Time cannot be zero."
+        else do
+          result <- try (readFile "data.txt") :: IO (Either SomeException String)
+          case result of
+            Left _ ->
+              putStrLn "Error: Could not read the file."
+            Right content ->
+              case readMaybe content of
+                Nothing ->
+                  putStrLn "Error: Invalid distance in file."
+                Just distance -> do
+                  let speed = distance / time
+                  putStrLn ("Speed: " ++ show speed ++ " km/h")
