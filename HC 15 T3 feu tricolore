@@ -1,0 +1,41 @@
+-- HC15T3 : Exception personnalisée pour feux tricolores
+
+import Control.Exception
+
+-- Définition des feux
+data Feu = Rouge | Orange | Vert
+    deriving (Show)
+
+-- Définition de l'exception personnalisée
+data FeuException = FeuInvalide String
+    deriving (Show)
+
+instance Exception FeuException
+
+-- Conversion string -> Feu (avec exception)
+parseFeu :: String -> IO Feu
+parseFeu "rouge"  = return Rouge
+parseFeu "orange" = return Orange
+parseFeu "vert"   = return Vert
+parseFeu x        = throwIO (FeuInvalide x)
+
+-- Réaction de la voiture
+reactToFeu :: Feu -> String
+reactToFeu Rouge  = "STOP 🚗✋"
+reactToFeu Orange = "RALENTIR 🚗⚠️"
+reactToFeu Vert   = "AVANCER 🚗💨"
+
+-- Programme principal avec gestion d'exception
+main :: IO ()
+main = do
+    putStrLn "=== Système de feux avec exception personnalisée ==="
+    putStrLn "Entrez la couleur du feu : rouge / orange / vert"
+
+    input <- getLine
+
+    result <- try (parseFeu input) :: IO (Either FeuException Feu)
+
+    case result of
+        Right feu -> putStrLn (reactToFeu feu)
+        Left (FeuInvalide couleur) ->
+            putStrLn ("❌ Erreur : feu invalide -> " ++ couleur)
