@@ -1,0 +1,30 @@
+-- HC15T2 : Système basique de voiture autonome
+-- Réaction aux feux tricolores
+
+-- Définition des couleurs du feu
+data Feu = Rouge | Orange | Vert
+    deriving (Show)
+
+-- Fonction de décision de la voiture autonome
+reactToFeu :: Feu -> String
+reactToFeu Rouge  = "STOP 🚗✋ : Le feu est rouge"
+reactToFeu Orange = "RALENTIR 🚗⚠️ : Le feu est orange"
+reactToFeu Vert   = "AVANCER 🚗💨 : Le feu est vert"
+
+-- Simulation principale
+main :: IO ()
+main = do
+    putStrLn "=== Système basique de voiture autonome ==="
+    putStrLn "Choisissez la couleur du feu : rouge / orange / vert"
+
+    couleur <- getLine
+
+    let feu = case couleur of
+                "rouge"  -> Just Rouge
+                "orange" -> Just Orange
+                "vert"   -> Just Vert
+                _        -> Nothing
+
+    case feu of
+        Just f  -> putStrLn (reactToFeu f)
+        Nothing -> putStrLn "❌ Couleur inconnue. Veuillez entrer rouge, orange ou vert."
